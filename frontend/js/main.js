@@ -1,7 +1,9 @@
+// Complete main.js with initializeApp defined before usage
+
 const API_BASE_URL = 'https://projectrender-k2t3.onrender.com/api';
 const BACKEND_URL = 'https://projectrender-k2t3.onrender.com';
 
-let currentUser = null;
+let currentUser  = null;
 let currentTheme = 'light';
 
 // Initialize Google Sign-In
@@ -39,7 +41,7 @@ async function handleGoogleSignIn(response) {
     try {
         const responsePayload = parseJwt(response.credential);
         
-        const googleUser = {
+        const googleUser  = {
             googleId: responsePayload.sub,
             email: responsePayload.email,
             name: responsePayload.name,
@@ -79,7 +81,7 @@ function parseJwt(token) {
     }
 }
 
-// Initialize application
+// Define initializeApp BEFORE usage
 function initializeApp() {
     console.log('App initialized');
     checkAuthStatus();
@@ -123,7 +125,7 @@ async function verifyToken(token) {
         
         if (response.ok) {
             const data = await response.json();
-            currentUser = data.user;
+            currentUser  = data.user;
             updateUserUI();
             return true;
         }
@@ -216,7 +218,7 @@ function toggleTheme() {
     const newTheme = currentTheme === 'light' ? 'dark' : 'light';
     applyTheme(newTheme);
     
-    if (currentUser) {
+    if (currentUser ) {
         saveThemePreference(newTheme);
     }
 }
@@ -238,29 +240,27 @@ async function saveThemePreference(theme) {
 }
 
 function updateUserUI() {
-    if (!currentUser) return;
+    if (!currentUser ) return;
     
     const profilePicElements = document.querySelectorAll('.profile-pic');
     const usernameElements = document.querySelectorAll('.username');
     const profilePicPreview = document.getElementById('profilePicPreview');
 
-    let profilePicUrl = currentUser.profile_pic || 'images/user.png';
+    let profilePicUrl = currentUser .profile_pic || 'images/user.png';
     
-    // Handle different types of profile picture URLs
     if (profilePicUrl.startsWith('http')) {
-        // It's a Google URL, use as-is
+        // Google profile pic URL
     } else if (profilePicUrl.startsWith('/uploads/')) {
-        // It's an uploaded file, prepend backend URL
         profilePicUrl = BACKEND_URL + profilePicUrl;
     }
 
     profilePicElements.forEach(el => {
         el.src = profilePicUrl;
-        el.alt = currentUser.name;
+        el.alt = currentUser .name;
     });
 
     usernameElements.forEach(el => {
-        el.textContent = currentUser.name;
+        el.textContent = currentUser .name;
     });
 
     if (profilePicPreview) {
@@ -269,12 +269,12 @@ function updateUserUI() {
     
     const userNameInput = document.getElementById('userName');
     if (userNameInput) {
-        userNameInput.value = currentUser.name;
+        userNameInput.value = currentUser .name;
     }
     
     const userEmail = document.getElementById('userEmail');
     if (userEmail) {
-        userEmail.textContent = currentUser.email;
+        userEmail.textContent = currentUser .email;
     }
 }
 
@@ -358,143 +358,6 @@ function handleLogout() {
     window.location.href = 'login.html';
 }
 
-function setupSettingsListeners() {
-    const updateNameForm = document.getElementById('updateNameForm');
-    const profilePicInput = document.getElementById('profilePicInput');
-    const deleteAccountBtn = document.getElementById('deleteAccountBtn');
-    
-    if (updateNameForm) {
-        updateNameForm.addEventListener('submit', handleNameUpdate);
-    }
-    
-    if (profilePicInput) {
-        profilePicInput.addEventListener('change', handleProfilePicUpload);
-    }
-    
-    if (deleteAccountBtn) {
-        deleteAccountBtn.addEventListener('click', handleDeleteAccount);
-    }
-    
-    loadUserData();
-}
-
-async function loadUserData() {
-    const token = localStorage.getItem('token');
-    if (!token) {
-        window.location.href = 'login.html';
-        return;
-    }
-    
-    try {
-        const response = await fetch(`${API_BASE_URL}/user/profile`, {
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        });
-        
-        if (response.ok) {
-            const data = await response.json();
-            currentUser = data.user;
-            updateUserUI();
-        } else {
-            showAlert('Failed to load user data', 'error');
-        }
-    } catch (error) {
-        showAlert('Error loading user data', 'error');
-    }
-}
-
-async function handleNameUpdate(event) {
-    event.preventDefault();
-    
-    const formData = new FormData(event.target);
-    const name = formData.get('name');
-    const token = localStorage.getItem('token');
-    
-    try {
-        const response = await fetch(`${API_BASE_URL}/user/name`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
-            },
-            body: JSON.stringify({ name })
-        });
-        
-        if (response.ok) {
-            currentUser.name = name;
-            updateUserUI();
-            showAlert('Name updated successfully', 'success');
-        } else {
-            const data = await response.json();
-            showAlert(data.error || 'Failed to update name', 'error');
-        }
-    } catch (error) {
-        showAlert('An error occurred while updating your name', 'error');
-    }
-}
-
-async function handleProfilePicUpload(event) {
-    const file = event.target.files[0];
-    if (!file) return;
-    
-    const token = localStorage.getItem('token');
-    const formData = new FormData();
-    formData.append('profilePic', file);
-    
-    try {
-        const response = await fetch(`${API_BASE_URL}/user/profile-picture`, {
-            method: 'POST',
-            headers: {
-                'Authorization': `Bearer ${token}`
-            },
-            body: formData
-        });
-        
-        const data = await response.json();
-        
-        if (response.ok) {
-            currentUser.profile_pic = data.profile_pic;
-            updateUserUI();
-            showAlert('Profile picture updated successfully', 'success');
-        } else {
-            showAlert(data.error || 'Failed to upload profile picture', 'error');
-        }
-    } catch (error) {
-        showAlert('An error occurred while uploading your profile picture', 'error');
-    }
-}
-
-async function handleDeleteAccount() {
-    if (!confirm('Are you sure you want to delete your account? This action cannot be undone.')) {
-        return;
-    }
-    
-    const token = localStorage.getItem('token');
-    
-    try {
-        const response = await fetch(`${API_BASE_URL}/user/account`, {
-            method: 'DELETE',
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        });
-        
-        if (response.ok) {
-            localStorage.removeItem('token');
-            showAlert('Account deleted successfully', 'success');
-            setTimeout(() => {
-                window.location.href = 'login.html';
-            }, 2000);
-        } else {
-            const data = await response.json();
-            showAlert(data.error || 'Failed to delete account', 'error');
-        }
-    } catch (error) {
-        showAlert('An error occurred while deleting your account', 'error');
-    }
-}
-
 function showAlert(message, type = 'info') {
     const existingAlerts = document.querySelectorAll('.alert');
     existingAlerts.forEach(alert => alert.remove());
@@ -511,7 +374,7 @@ function showAlert(message, type = 'info') {
     }, 5000);
 }
 
-// Initialize the app when DOM is loaded
+// Attach event listener AFTER initializeApp is defined
 document.addEventListener('DOMContentLoaded', function() {
     initializeApp();
 });
