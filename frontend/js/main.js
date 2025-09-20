@@ -149,6 +149,21 @@ function setupNavigation() {
     });
 }
 
+function setupSettingsListeners() {
+  const updateNameForm = document.getElementById('updateNameForm');
+  const profilePicInput = document.getElementById('profilePicInput');
+  const deleteAccountBtn = document.getElementById('deleteAccountBtn');
+  if (updateNameForm) {
+    updateNameForm.addEventListener('submit', handleNameUpdate);
+  }
+  if (profilePicInput) {
+    profilePicInput.addEventListener('change', handleProfilePicUpload);
+  }
+  if (deleteAccountBtn) {
+    deleteAccountBtn.addEventListener('click', handleDeleteAccount);
+  }
+}
+
 function setupEventListeners() {
     document.addEventListener('click', handleGlobalClick);
     
