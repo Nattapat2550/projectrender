@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us - My Website</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <nav class="navbar">
+                <a href="home.html" class="logo">MyWebsite</a>
+                <div class="nav-links">
+                    <a href="home.html">Home</a>
+                    <a href="about.html">About</a>
+                    <a href="contact.html">Contact</a>
+                    <div class="profile-container">
+                        <img src="images/user.png" alt="Profile" class="profile-pic">
+                        <span class="username">Guest</span>
+                        <div class="dropdown">
+                            <a href="settings.html" class="dropdown-item">Settings</a>
+                            <div class="dropdown-divider"></div>
+                            <div class="dropdown-item" id="logoutBtn">Logout</div>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section class="page-header">
+            <div class="container">
+                <h1>Contact Us</h1>
+                <p>Get in touch with us. We'd love to hear from you!</p>
+            </div>
+        </section>
+
+        <section class="page-content">
+            <div class="container">
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <h2>Get In Touch</h2>
+                        <p>Have questions, suggestions, or need support? Fill out the form below and we'll get back to you as soon as possible.</p>
+                        
+                        <form class="contact-form" id="contactForm">
+                            <div class="form-group">
+                                <label for="contactName">Your Name</label>
+                                <input type="text" id="contactName" name="name" class="form-control" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="contactEmail">Your Email</label>
+                                <input type="email" id="contactEmail" name="email" class="form-control" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="contactSubject">Subject</label>
+                                <input type="text" id="contactSubject" name="subject" class="form-control" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="contactMessage">Message</label>
+                                <textarea id="contactMessage" name="message" class="form-control" rows="5" required></textarea>
+                            </div>
+                            
+                            <button type="submit" class="btn">Send Message</button>
+                        </form>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <h2>Contact Information</h2>
+                        <div class="contact-info">
+                            <h3>📧 Email</h3>
+                            <p>support@mywebsite.com</p>
+                            
+                            <h3>🌐 Website</h3>
+                            <p>www.mywebsite.com</p>
+                            
+                            <h3>⏰ Business Hours</h3>
+                            <p>Monday - Friday: 9:00 AM - 6:00 PM</p>
+                            <p>Saturday: 10:00 AM - 4:00 PM</p>
+                            <p>Sunday: Closed</p>
+                            
+                            <h3>📍 Location</h3>
+                            <p>123 Web Street<br>Digital City, DC 12345<br>United States</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="feature-card mt-20">
+                    <h2>Frequently Asked Questions</h2>
+                    <div class="faq-grid">
+                        <div class="faq-item">
+                            <h3>How do I reset my password?</h3>
+                            <p>You can reset your password by clicking on "Forgot Password" on the login page and following the instructions sent to your email.</p>
+                        </div>
+                        <div class="faq-item">
+                            <h3>Can I change my username?</h3>
+                            <p>Yes, you can change your display name in the Settings page at any time.</p>
+                        </div>
+                        <div class="faq-item">
+                            <h3>Is my data secure?</h3>
+                            <p>Absolutely! We use industry-standard encryption and security practices to protect your data.</p>
+                        </div>
+                        <div class="faq-item">
+                            <h3>How do I delete my account?</h3>
+                            <p>You can delete your account from the Settings page. This action is irreversible.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <p>© 2024 My Website. All rights reserved.</p>
+                <div class="footer-links">
+                    <a href="about.html">About</a>
+                    <a href="contact.html">Contact</a>
+                    <a href="privacy.html">Privacy</a>
+                    <a href="terms.html">Terms</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/main.js"></script>
+    <script>
+        document.getElementById('contactForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            showAlert('Thank you for your message! We will get back to you soon.', 'success');
+            this.reset();
+        });
+    </script>
+</body>
+</html>

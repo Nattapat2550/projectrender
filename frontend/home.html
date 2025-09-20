@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home - My Website</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <nav class="navbar">
+                <a href="home.html" class="logo">MyWebsite</a>
+                <div class="nav-links">
+                    <a href="home.html">Home</a>
+                    <a href="about.html">About</a>
+                    <a href="contact.html">Contact</a>
+                    <div class="profile-container">
+                        <img src="images/user.png" alt="Profile" class="profile-pic">
+                        <span class="username">Guest</span>
+                        <div class="dropdown">
+                            <a href="settings.html" class="dropdown-item">Settings</a>
+                            <div class="dropdown-divider"></div>
+                            <div class="dropdown-item" id="logoutBtn">Logout</div>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section class="hero">
+            <div class="container">
+                <h1>Welcome back, <span class="username">User</span>!</h1>
+                <p>We're glad to see you again. Explore your dashboard and discover new features.</p>
+            </div>
+        </section>
+
+        <section class="features">
+            <div class="container">
+                <h2 class="text-center">Your Dashboard</h2>
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">⚙️</div>
+                        <h3>Account Settings</h3>
+                        <p>Manage your profile, update your information, and customize your preferences.</p>
+                        <a href="settings.html" class="btn" style="margin-top: 15px;">Go to Settings</a>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">📊</div>
+                        <h3>Your Statistics</h3>
+                        <p>View your activity history and track your progress on our platform.</p>
+                        <button class="btn" style="margin-top: 15px;" onclick="showAlert('Statistics feature coming soon!', 'info')">View Stats</button>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🔔</div>
+                        <h3>Notifications</h3>
+                        <p>Stay updated with the latest news and important announcements.</p>
+                        <button class="btn" style="margin-top: 15px;" onclick="showAlert('No new notifications', 'info')">Check Notifications</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="page-content">
+            <div class="container">
+                <h2 class="text-center">Recent Activity</h2>
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <h3>Last Login</h3>
+                        <p id="lastLoginTime">Loading...</p>
+                    </div>
+                    <div class="feature-card">
+                        <h3>Account Status</h3>
+                        <p id="accountStatus">Active</p>
+                    </div>
+                    <div class="feature-card">
+                        <h3>Theme Preference</h3>
+                        <p id="themePreference">Light Mode</p>
+                        <button class="btn" style="margin-top: 10px;" id="themeToggle">Switch Theme</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <p>© 2024 My Website. All rights reserved.</p>
+                <div class="footer-links">
+                    <a href="about.html">About</a>
+                    <a href="contact.html">Contact</a>
+                    <a href="privacy.html">Privacy</a>
+                    <a href="terms.html">Terms</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/main.js"></script>
+    <script>
+        // Update last login time
+        document.getElementById('lastLoginTime').textContent = new Date().toLocaleString();
+        
+        // Update theme preference display
+        const currentTheme = localStorage.getItem('theme') || 'light';
+        document.getElementById('themePreference').textContent = 
+            currentTheme === 'light' ? 'Light Mode' : 'Dark Mode';
+    </script>
+</body>
+</html>

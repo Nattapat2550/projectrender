@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings - My Website</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <nav class="navbar">
+                <a href="home.html" class="logo">MyWebsite</a>
+                <div class="nav-links">
+                    <a href="home.html">Home</a>
+                    <a href="about.html">About</a>
+                    <a href="contact.html">Contact</a>
+                    <div class="profile-container">
+                        <img src="images/user.png" alt="Profile" class="profile-pic">
+                        <span class="username">Guest</span>
+                        <div class="dropdown">
+                            <a href="settings.html" class="dropdown-item">Settings</a>
+                            <div class="dropdown-divider"></div>
+                            <div class="dropdown-item" id="logoutBtn">Logout</div>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section class="page-header">
+            <div class="container">
+                <h1>Account Settings</h1>
+                <p>Manage your profile and preferences</p>
+            </div>
+        </section>
+
+        <section class="settings-container">
+            <div class="container">
+                <!-- Profile Information -->
+                <div class="settings-section">
+                    <h2>Profile Information</h2>
+                    
+                    <div class="settings-group">
+                        <label>Profile Picture</label>
+                        <img id="profilePicPreview" src="images/user.png" alt="Profile Preview" class="profile-pic-preview">
+                        <input type="file" id="profilePicInput" accept="image/*" class="file-input">
+                        <label for="profilePicInput" class="file-label">Choose New Photo</label>
+                    </div>
+                    
+                    <form id="updateNameForm">
+                        <div class="settings-group">
+                            <label for="userName">Display Name</label>
+                            <input type="text" id="userName" name="name" class="form-control" required>
+                        </div>
+                        <button type="submit" class="btn">Update Name</button>
+                    </form>
+                </div>
+
+                <!-- Theme Preferences -->
+                <div class="settings-section">
+                    <h2>Appearance</h2>
+                    
+                    <div class="settings-group">
+                        <label>Theme Preference</label>
+                        <div class="theme-toggle">
+                            <button type="button" class="theme-toggle-btn active" data-theme="light">Light Mode</button>
+                            <button type="button" class="theme-toggle-btn" data-theme="dark">Dark Mode</button>
+                        </div>
+                    </div>
+                    
+                    <button type="button" class="btn" id="themeToggle">Apply Theme</button>
+                </div>
+
+                <!-- Account Security -->
+                <div class="settings-section">
+                    <h2>Account Security</h2>
+                    
+                    <div class="settings-group">
+                        <label>Email Address</label>
+                        <p class="form-control" style="background-color: var(--bg-color);">
+                            <span id="userEmail">user@example.com</span>
+                        </p>
+                        <small>Contact support to change your email address</small>
+                    </div>
+                    
+                    <div class="settings-group">
+                        <label>Password</label>
+                        <button type="button" class="btn" onclick="showAlert('Password reset feature coming soon!', 'info')">
+                            Change Password
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Danger Zone -->
+                <div class="settings-section danger-zone">
+                    <h2 style="color: var(--error-color);">Danger Zone</h2>
+                    
+                    <div class="settings-group">
+                        <label>Delete Account</label>
+                        <p>Once you delete your account, there is no going back. Please be certain.</p>
+                        <button type="button" class="btn danger-btn" id="deleteAccountBtn">
+                            Delete My Account
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <p>© 2024 My Website. All rights reserved.</p>
+                <div class="footer-links">
+                    <a href="about.html">About</a>
+                    <a href="contact.html">Contact</a>
+                    <a href="privacy.html">Privacy</a>
+                    <a href="terms.html">Terms</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/main.js"></script>
+    <script src="js/profile.js"></script>
+    <script>
+        // Theme toggle buttons
+        const themeButtons = document.querySelectorAll('.theme-toggle-btn');
+        themeButtons.forEach(btn => {
+            btn.addEventListener('click', function() {
+                themeButtons.forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                const theme = this.getAttribute('data-theme');
+                applyTheme(theme);
+            });
+        });
+
+        // Set initial theme button state
+        document.addEventListener('DOMContentLoaded', function() {
+            const currentTheme = localStorage.getItem('theme') || 'light';
+            const activeBtn = document.querySelector(`.theme-toggle-btn[data-theme="${currentTheme}"]`);
+            if (activeBtn) {
+                themeButtons.forEach(btn => btn.classList.remove('active'));
+                activeBtn.classList.add('active');
+            }
+        });
+    </script>
+</body>
+</html>
