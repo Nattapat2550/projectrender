@@ -6,7 +6,6 @@ const pool = new Pool({
   ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false
 });
 
-// Create users table if it doesn't exist
 const initDb = async () => {
   try {
     await pool.query(`
