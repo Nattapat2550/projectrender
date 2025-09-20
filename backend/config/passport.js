@@ -3,11 +3,11 @@ const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const { pool } = require('../db/db');
 require('dotenv').config();
 
-passport.serializeUser ((user, done) => {
+passport.serializeUser((user, done) => {
   done(null, user.id);
 });
 
-passport.deserializeUser (async (id, done) => {
+passport.deserializeUser(async (id, done) => {
   try {
     const result = await pool.query('SELECT * FROM users WHERE id = $1', [id]);
     done(null, result.rows[0]);
