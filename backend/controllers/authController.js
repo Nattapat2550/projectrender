@@ -5,6 +5,94 @@ require('dotenv').config();
 
 const JWT_SECRET = process.env.JWT_SECRET;
 
+// Unified login function that handles both email/password and Google users
+exports.unifiedLogin = async (req, res) => {
+  try {
+    const { email, password, googleToken } = req.body;
+
+    // Google OAuth login
+    if (googleToken) {
+      // Verify Google token (you might want to use Google's token verification library)
+      // For simplicity, we'll assume the frontend sends valid Google user data
+      const googleUser = req.body.googleUser;
+      
+      if (!googleUser || !googleUser.email) {
+        return res.status(400).json({ error: 'Invalid Google login data' });
+      }
+
+      let result = await pool.query('SELECT * FROM users WHERE email = $1 OR google_id = $2', 
+        [googleUser.email, googleUser.googleId]);
+      
+      let user;
+      if (result.rows.length > 0) {
+        user = result.rows[0];
+        // Update user if they previously registered with email/password
+        if (!user.google_id) {
+          await pool.query('UPDATE users SET google_id = $1 WHERE id = $2', 
+            [googleUser.googleId, user.id]);
+        }
+      } else {
+        // Create new user from Google
+        result = await pool.query(
+          'INSERT INTO users (name, email, google_id, profile_pic) VALUES ($1, $2, $3, $4) RETURNING *',
+          [googleUser.name, googleUser.email, googleUser.googleId, googleUser.photo]
+        );
+        user = result.rows[0];
+      }
+
+      const token = jwt.sign({ userId: user.id }, JWT_SECRET, { expiresIn: '24h' });
+      
+      return res.json({
+        message: 'Google login successful',
+        user: {
+          id: user.id,
+          name: user.name,
+          email: user.email,
+          profile_pic: user.profile_pic
+        },
+        token
+      });
+    }
+
+    // Traditional email/password login
+    if (!email || !password) {
+      return res.status(400).json({ error: 'Email and password are required' });
+    }
+
+    const result = await pool.query('SELECT * FROM users WHERE email = $1', [email]);
+    if (result.rows.length === 0) {
+      return res.status(400).json({ error: 'Invalid credentials' });
+    }
+
+    const user = result.rows[0];
+    
+    if (user.google_id && !user.password) {
+      return res.status(400).json({ error: 'Please login with Google' });
+    }
+
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      return res.status(400).json({ error: 'Invalid credentials' });
+    }
+
+    const token = jwt.sign({ userId: user.id }, JWT_SECRET, { expiresIn: '24h' });
+
+    res.json({ 
+      message: 'Login successful', 
+      user: { 
+        id: user.id, 
+        name: user.name, 
+        email: user.email, 
+        profile_pic: user.profile_pic 
+      }, 
+      token 
+    });
+  } catch (error) {
+    console.error('Login error:', error);
+    res.status(500).json({ error: 'Server error' });
+  }
+};
+
 exports.register = async (req, res) => {
   try {
     const { name, email, password } = req.body;
@@ -36,48 +124,6 @@ exports.register = async (req, res) => {
     });
   } catch (error) {
     console.error('Registration error:', error);
-    res.status(500).json({ error: 'Server error' });
-  }
-};
-
-exports.login = async (req, res) => {
-  try {
-    const { email, password } = req.body;
-
-    if (!email || !password) {
-      return res.status(400).json({ error: 'Email and password are required' });
-    }
-
-    const result = await pool.query('SELECT * FROM users WHERE email = $1', [email]);
-    if (result.rows.length === 0) {
-      return res.status(400).json({ error: 'Invalid credentials' });
-    }
-
-    const user = result.rows[0];
-    
-    if (!user.password) {
-      return res.status(400).json({ error: 'Please login with Google' });
-    }
-
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) {
-      return res.status(400).json({ error: 'Invalid credentials' });
-    }
-
-    const token = jwt.sign({ userId: user.id }, JWT_SECRET, { expiresIn: '24h' });
-
-    res.json({ 
-      message: 'Login successful', 
-      user: { 
-        id: user.id, 
-        name: user.name, 
-        email: user.email, 
-        profile_pic: user.profile_pic 
-      }, 
-      token 
-    });
-  } catch (error) {
-    console.error('Login error:', error);
     res.status(500).json({ error: 'Server error' });
   }
 };

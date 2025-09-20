@@ -27,20 +27,28 @@ passport.use(new GoogleStrategy({
     const googleId = profile.id;
     const name = profile.displayName;
     const photo = profile.photos && profile.photos[0] ? profile.photos[0].value : null;
+
+    // Check if user exists by email or google_id
     let result = await pool.query(
-      'SELECT * FROM users WHERE google_id = $1 OR email = $2',
-      [googleId, email]
+      'SELECT * FROM users WHERE email = $1 OR google_id = $2',
+      [email, googleId]
     );
+
     if (result.rows.length > 0) {
-      if (!result.rows[0].google_id) {
-        await pool.query('UPDATE users SET google_id = $1 WHERE id = $2', [googleId, result.rows[0].id]);
+      const user = result.rows[0];
+      
+      // Update user record if needed
+      if (!user.google_id) {
+        await pool.query('UPDATE users SET google_id = $1 WHERE id = $2', [googleId, user.id]);
       }
-      // Update profile_pic if empty or default
-      if (!result.rows[0].profile_pic || result.rows[0].profile_pic === 'user.png') {
-        await pool.query('UPDATE users SET profile_pic = $1 WHERE id = $2', [photo, result.rows[0].id]);
+      if (!user.profile_pic || user.profile_pic === 'user.png') {
+        await pool.query('UPDATE users SET profile_pic = $1 WHERE id = $2', [photo, user.id]);
+        user.profile_pic = photo;
       }
-      return done(null, result.rows[0]);
+      
+      return done(null, user);
     } else {
+      // Create new user with Google data
       result = await pool.query(
         'INSERT INTO users (name, email, google_id, profile_pic) VALUES ($1, $2, $3, $4) RETURNING *',
         [name, email, googleId, photo]

@@ -56,8 +56,14 @@
 
                 <div style="text-align: center; margin: 20px 0;">
                     <div style="border-bottom: 1px solid var(--border-color); margin: 20px 0;"></div>
-                    <button id="googleLoginBtn" class="btn btn-google btn-block">
-                        Sign in with Google
+                    <p style="margin-bottom: 15px;">Or continue with</p>
+                    
+                    <!-- Google Sign-In Button -->
+                    <div id="googleSignInBtn" style="margin: 0 auto; width: 240px;"></div>
+                    
+                    <!-- Legacy Google OAuth button (fallback) -->
+                    <button id="googleOAuthBtn" class="btn btn-google btn-block" style="margin-top: 15px; display: none;">
+                        Sign in with Google (OAuth)
                     </button>
                 </div>
             </div>

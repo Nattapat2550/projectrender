@@ -5,9 +5,10 @@ const authController = require('../controllers/authController');
 const router = express.Router();
 
 router.post('/register', authController.register);
-router.post('/login', authController.login);
+router.post('/login', authController.unifiedLogin); // Changed to unified login
 router.get('/verify', authController.verifyToken);
 
+// Google OAuth routes (for redirect flow)
 router.get('/google', 
   passport.authenticate('google', { scope: ['profile', 'email'] })
 );
