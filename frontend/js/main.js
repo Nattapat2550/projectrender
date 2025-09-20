@@ -170,28 +170,21 @@ function updateUserUI() {
     const usernameElements = document.querySelectorAll('.username');
     const profilePicPreview = document.getElementById('profilePicPreview');
     
-    profilePicElements.forEach(el => {
-        el.src = currentUser.profile_pic || 'images/user.png';
-        el.alt = currentUser.name;
-    });
-    
-    usernameElements.forEach(el => {
-        el.textContent = currentUser.name;
-    });
-    
-    if (profilePicPreview) {
-        profilePicPreview.src = currentUser.profile_pic || 'images/user.png';
-    }
-    
-    const userNameInput = document.getElementById('userName');
-    if (userNameInput) {
-        userNameInput.value = currentUser.name;
-    }
-    
-    const userEmail = document.getElementById('userEmail');
-    if (userEmail) {
-        userEmail.textContent = currentUser.email;
-    }
+    // Determine full URL for profile picture
+  let profilePicUrl = currentUser .profile_pic || 'images/user.png';
+  if (profilePicUrl.startsWith('/uploads/')) {
+    profilePicUrl = BACKEND_URL + profilePicUrl;
+  }
+  profilePicElements.forEach(el => {
+    el.src = profilePicUrl;
+    el.alt = currentUser .name;
+  });
+  usernameElements.forEach(el => {
+    el.textContent = currentUser .name;
+  });
+  if (profilePicPreview) {
+    profilePicPreview.src = profilePicUrl;
+  }
 }
 
 function toggleDropdown(event) {
