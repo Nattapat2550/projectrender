@@ -1,4 +1,4 @@
-const API_BASE_URL = 'http://localhost:5000/api';
+const API_BASE_URL = 'https://projectrender-k2t3.onrender.com/api';
 
 let currentUser = null;
 let currentTheme = 'light';
